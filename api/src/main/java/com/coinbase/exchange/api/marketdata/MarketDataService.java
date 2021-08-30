@@ -1,7 +1,7 @@
 package com.coinbase.exchange.api.marketdata;
 
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -22,11 +22,11 @@ public class MarketDataService {
         String marketDataEndpoint = PRODUCT_ENDPOINT + "/" + productId + "/book";
         if(level != 1)
             marketDataEndpoint += "?level=" + level;
-       return exchange.get(marketDataEndpoint, new ParameterizedTypeReference<MarketData>(){});
+       return exchange.get(marketDataEndpoint, new TypeReference<>(){});
     }
 
     public List<Trade> getTrades(String productId) {
         String tradesEndpoint = PRODUCT_ENDPOINT + "/" + productId + "/trades";
-        return exchange.getAsList(tradesEndpoint, new ParameterizedTypeReference<Trade[]>(){});
+        return exchange.get(tradesEndpoint, new TypeReference<>(){});
     }
 }

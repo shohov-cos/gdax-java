@@ -3,18 +3,21 @@ package com.coinbase.exchange.api.config;
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
 import com.coinbase.exchange.api.exchange.CoinbaseExchangeImpl;
 import com.coinbase.exchange.security.Signature;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 
+import java.util.concurrent.Executors;
+
 @SpringBootConfiguration
 public class IntegrationTestConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper().registerModule(new JavaTimeModule());
+        return new ObjectMapper().registerModule(new JavaTimeModule()).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     @Bean
@@ -27,7 +30,8 @@ public class IntegrationTestConfiguration {
                 passphrase,
                 baseUrl,
                 new Signature(secretKey),
-                objectMapper);
+                objectMapper,
+                Executors.newSingleThreadExecutor());
     }
 
 }

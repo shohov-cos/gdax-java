@@ -1,20 +1,15 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:5.1.0'
-    }
+plugins {
+    id "com.github.johnrengelman.shadow" version "6.1.0" apply false
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
+//apply plugin: 'com.github.johnrengelman.shadow'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
 allprojects {
-    apply plugin: 'java'
+    apply plugin: 'java-library'
 
     group = 'com.coinbase.exchange'
     description = 'Client for the Coinbase Pro API'
@@ -23,49 +18,37 @@ allprojects {
     repositories {
         mavenCentral()
     }
-
-    test {
-        exclude '**/*IntegrationTest*'
-    }
-
-    /**
-     * User can run these as optional against the sandbox api exchange
-     **/
-    task integrationTest(type: Test) {
-        include '**/*IntegrationTest*'
-    }
 }
 
-subprojects { }
+subprojects {
 
-// apply dependency constraints to all java modules
-configure(subprojects.findAll { true }) {
-
-    sourceCompatibility = 1.11
-    targetCompatibility = 1.11
+    java {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
     dependencies {
+        testImplementation(platform('org.junit:junit-bom:5.7.2'))
+
         constraints {
-            implementation 'com.fasterxml.jackson.core:jackson-core:2.11.0'
-            implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
-            implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
-            implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.0'
-            implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.0'
+            implementation 'com.fasterxml.jackson.core:jackson-core:2.12.5'
+            implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.5'
+            implementation 'com.fasterxml.jackson.core:jackson-annotations:2.12.5'
+            implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.12.5'
+            implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.5'
             implementation 'org.slf4j:slf4j-api:1.7.28'
-            implementation 'ch.qos.logback:logback-classic:1.2.3'
-            implementation 'ch.qos.logback:logback-core:1.2.3'
-            implementation 'org.springframework.boot:spring-boot-starter-web:2.2.7.RELEASE'
-            implementation 'org.springframework:spring-context:5.2.6.RELEASE'
 
             // --------------------------------------
-            testImplementation 'junit:junit:4.12'
-            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-            testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.2'
-            testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
-            testImplementation 'org.junit.platform:junit-platform-suite-api:1.3.2'
+//            testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+//            testImplementation 'org.junit.jupiter:junit-jupiter-params:5.5.2'
+//            testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+//            testImplementation 'org.junit.platform:junit-platform-suite-api:1.3.2'
 
             testImplementation 'org.springframework.boot:spring-boot-test:2.2.7.RELEASE'
             testImplementation 'org.springframework.boot:spring-boot-starter-test:2.2.7.RELEASE'
+
+            testImplementation 'ch.qos.logback:logback-classic:1.2.3'
+            testImplementation 'ch.qos.logback:logback-core:1.2.3'
 
             testImplementation 'org.mockito:mockito-core:3.0.0'
             testImplementation 'org.mockito:mockito-junit-jupiter:3.0.0'
@@ -73,11 +56,31 @@ configure(subprojects.findAll { true }) {
             testImplementation 'org.assertj:assertj-core:3.13.2'
         }
     }
+
+    test {
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching '*Test'
+            excludeTestsMatching '*IntegrationTest'
+        }
+    }
+
+    /**
+     * User can run these as optional against the sandbox api exchange
+     **/
+    task integrationTest(type: Test) {
+        useJUnitPlatform()
+        filter {
+            includeTestsMatching '*IntegrationTest'
+
+            failOnNoMatchingTests false
+        }
+    }
 }
 
 dependencies {
-    compile project(":api")
-    compile project(":model")
-    compile project(":security")
-    compile project(":websocketfeed")
+    api project(":api")
+    api project(":model")
+    api project(":security")
+    api project(":websocketfeed")
 }

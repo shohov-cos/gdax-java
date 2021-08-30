@@ -1,7 +1,7 @@
 package com.coinbase.exchange.api.transfers;
 
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.math.BigDecimal;
 
@@ -30,7 +30,7 @@ public class TransferService {
      */
     public String transfer(String type, BigDecimal amount, String coinbaseAccountId) {
         return coinbaseExchange.post(TRANSFER_ENDPOINT,
-                new ParameterizedTypeReference<String>(){},
+                new TypeReference<>(){},
                 new Transfer(type, amount, coinbaseAccountId));
     }
 

@@ -86,7 +86,7 @@ class StatusMessageTest {
         assertEquals("BTC/USD", result.getProducts()[0].getDisplay_name());
         assertEquals("online", result.getProducts()[0].getStatus());
         assertEquals("some status message1", result.getProducts()[0].getStatus_message());
-        assertEquals(10, result.getProducts()[0].getMin_market_funds());
+        assertEquals(BigDecimal.TEN, result.getProducts()[0].getMin_market_funds());
         assertEquals(1000000, result.getProducts()[0].getMax_market_funds());
         assertEquals(false, result.getProducts()[0].getPost_only());
         assertEquals(false, result.getProducts()[0].getLimit_only());

@@ -1,8 +1,8 @@
 package com.coinbase.exchange.api.accounts;
 
-import com.coinbase.exchange.model.Hold;
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import org.springframework.core.ParameterizedTypeReference;
+import com.coinbase.exchange.model.Hold;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -20,16 +20,16 @@ public class AccountService {
     public static final String ACCOUNTS_ENDPOINT = "/accounts";
 
     public List<Account> getAccounts(){
-        return exchange.getAsList(ACCOUNTS_ENDPOINT, new ParameterizedTypeReference<Account[]>(){});
+        return exchange.get(ACCOUNTS_ENDPOINT, new TypeReference<>(){});
     }
 
     public Account getAccount(String id) {
-        return exchange.get(ACCOUNTS_ENDPOINT + "/" + id, new ParameterizedTypeReference<Account>() {});
+        return exchange.get(ACCOUNTS_ENDPOINT + "/" + id, new TypeReference<>() {});
     }
 
     public List<AccountHistory> getAccountHistory(String accountId) {
         String accountHistoryEndpoint = ACCOUNTS_ENDPOINT + "/" + accountId + "/ledger";
-        return exchange.getAsList(accountHistoryEndpoint, new ParameterizedTypeReference<AccountHistory[]>(){});
+        return exchange.get(accountHistoryEndpoint, new TypeReference<>(){});
     }
 
     public List<AccountHistory> getPagedAccountHistory(String accountId,
@@ -38,8 +38,8 @@ public class AccountService {
                                                        Integer limit) {
 
         String accountHistoryEndpoint = ACCOUNTS_ENDPOINT + "/" + accountId + "/ledger";
-        return exchange.pagedGetAsList(accountHistoryEndpoint,
-                new ParameterizedTypeReference<AccountHistory[]>(){},
+        return exchange.pagedGet(accountHistoryEndpoint,
+                new TypeReference<>(){},
                 beforeOrAfter,
                 pageNumber,
                 limit);
@@ -47,7 +47,7 @@ public class AccountService {
 
     public List<Hold> getHolds(String accountId) {
         String holdsEndpoint = ACCOUNTS_ENDPOINT + "/" + accountId + "/holds";
-        return exchange.getAsList(holdsEndpoint, new ParameterizedTypeReference<Hold[]>(){});
+        return exchange.get(holdsEndpoint, new TypeReference<>(){});
     }
 
     public List<Hold> getPagedHolds(String accountId,
@@ -55,8 +55,8 @@ public class AccountService {
                                     Integer pageNumber,
                                     Integer limit) {
         String holdsEndpoint = ACCOUNTS_ENDPOINT + "/" + accountId + "/holds";
-        return exchange.pagedGetAsList(holdsEndpoint,
-                new ParameterizedTypeReference<Hold[]>(){},
+        return exchange.pagedGet(holdsEndpoint,
+                new TypeReference<>(){},
                 beforeOrAfter,
                 pageNumber,
                 limit);

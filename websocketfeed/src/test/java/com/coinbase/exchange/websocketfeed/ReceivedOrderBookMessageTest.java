@@ -35,8 +35,8 @@ class ReceivedOrderBookMessageTest {
         assertEquals("BTC-USD", result.getProduct_id());
         assertEquals(10L, result.getSequence());
         assertEquals("d50ec984-77a8-460a-b958-66f114b0de9b", result.getOrder_id());
-        assertEquals(new BigDecimal(1.34).setScale(2, RoundingMode.HALF_UP), result.getSize());
-        assertEquals(new BigDecimal(502.1).setScale(1, RoundingMode.HALF_UP), result.getPrice());
+        assertEquals(0, BigDecimal.valueOf(1.34).setScale(2, RoundingMode.HALF_UP).compareTo(result.getSize()));
+        assertEquals(0, BigDecimal.valueOf(502.1).setScale(1, RoundingMode.HALF_UP).compareTo(result.getPrice()));
         assertEquals("buy", result.getSide());
         assertEquals("limit", result.getOrder_type());
     }

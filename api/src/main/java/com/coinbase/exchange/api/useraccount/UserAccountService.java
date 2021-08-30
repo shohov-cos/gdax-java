@@ -1,7 +1,7 @@
 package com.coinbase.exchange.api.useraccount;
 
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -23,6 +23,6 @@ public class UserAccountService {
      * @return UserAccountData
      */
     public List<UserAccountData> getTrailingVolume(){
-        return coinbaseExchange.getAsList(USER_ACCOUNT_ENDPOINT, new ParameterizedTypeReference<UserAccountData[]>() {});
+        return coinbaseExchange.get(USER_ACCOUNT_ENDPOINT, new TypeReference<>() {});
     }
 }

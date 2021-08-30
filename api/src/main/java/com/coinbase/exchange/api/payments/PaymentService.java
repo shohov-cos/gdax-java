@@ -1,7 +1,7 @@
 package com.coinbase.exchange.api.payments;
 
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
 
@@ -20,10 +20,10 @@ public class PaymentService {
     }
 
     public List<PaymentType> getPaymentTypes() {
-        return coinbaseExchange.getAsList(PAYMENT_METHODS_ENDPOINT, new ParameterizedTypeReference<PaymentType[]>(){});
+        return coinbaseExchange.get(PAYMENT_METHODS_ENDPOINT, new TypeReference<>(){});
     }
 
     public List<CoinbaseAccount> getCoinbaseAccounts() {
-        return coinbaseExchange.getAsList(COINBASE_ACCOUNTS_ENDPOINT, new ParameterizedTypeReference<CoinbaseAccount[]>() {});
+        return coinbaseExchange.get(COINBASE_ACCOUNTS_ENDPOINT, new TypeReference<>() {});
     }
 }

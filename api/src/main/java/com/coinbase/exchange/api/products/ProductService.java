@@ -4,11 +4,9 @@ import com.coinbase.exchange.api.exchange.CoinbaseExchange;
 import com.coinbase.exchange.model.Candles;
 import com.coinbase.exchange.model.Granularity;
 import com.coinbase.exchange.model.Product;
-import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +28,12 @@ public class ProductService {
 
     // no paged products necessary
     public List<Product> getProducts() {
-        return exchange.getAsList(PRODUCTS_ENDPOINT, new ParameterizedTypeReference<Product[]>() {
+        return exchange.get(PRODUCTS_ENDPOINT, new TypeReference<>() {
         });
     }
 
     public Candles getCandles(String productId) {
-        return new Candles(exchange.get(PRODUCTS_ENDPOINT + "/" + productId + "/candles", new ParameterizedTypeReference<List<String[]>>() {
+        return new Candles(exchange.get(PRODUCTS_ENDPOINT + "/" + productId + "/candles", new TypeReference<List<String[]>>() {
         }));
     }
 
@@ -47,7 +45,7 @@ public class ProductService {
                     .map(entry -> entry.getKey() + "=" + entry.getValue())
                     .collect(joining("&")));
         }
-        return new Candles(exchange.get(url.toString(), new ParameterizedTypeReference<List<String[]>>() {}));
+        return new Candles(exchange.get(url.toString(), new TypeReference<>() {}));
     }
 
     /**

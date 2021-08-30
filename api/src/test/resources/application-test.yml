@@ -10,3 +10,7 @@ websocket:
 
 gui:
   enabled: true
+
+logging:
+  level:
+    'com.coinbase': DEBUG

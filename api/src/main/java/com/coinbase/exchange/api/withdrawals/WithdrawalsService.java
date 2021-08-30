@@ -1,12 +1,8 @@
 package com.coinbase.exchange.api.withdrawals;
 
 import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import com.coinbase.exchange.model.CoinbasePaymentRequest;
-import com.coinbase.exchange.model.CryptoPaymentRequest;
-import com.coinbase.exchange.model.MonetaryRequest;
-import com.coinbase.exchange.model.PaymentRequest;
-import com.coinbase.exchange.model.PaymentResponse;
-import org.springframework.core.ParameterizedTypeReference;
+import com.coinbase.exchange.model.*;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -47,7 +43,7 @@ public class WithdrawalsService {
 
     private PaymentResponse makeWithdrawal(MonetaryRequest request, String withdrawalType) {
         return coinbaseExchange.post(WITHDRAWALS_ENDPOINT+ withdrawalType,
-                new ParameterizedTypeReference<PaymentResponse>() {},
+                new TypeReference<>() {},
                 request);
     }
 }

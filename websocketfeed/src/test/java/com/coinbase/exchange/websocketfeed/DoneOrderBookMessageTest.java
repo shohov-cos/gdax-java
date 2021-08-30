@@ -34,10 +34,10 @@ class DoneOrderBookMessageTest {
         assertEquals("2014-11-07T08:19:27.028459Z", result.getTime().toString());
         assertEquals("BTC-USD", result.getProduct_id());
         assertEquals(10L, result.getSequence());
-        assertEquals(new BigDecimal(200.2).setScale(1, RoundingMode.HALF_UP), result.getPrice());
+        assertEquals(0, BigDecimal.valueOf(200.2).setScale(1, RoundingMode.HALF_UP).compareTo(result.getPrice()));
         assertEquals("d50ec984-77a8-460a-b958-66f114b0de9b", result.getOrder_id());
         assertEquals("filled", result.getReason());
         assertEquals("sell", result.getSide());
-        assertEquals(new BigDecimal(0.2).setScale(1, RoundingMode.HALF_UP), result.getRemaining_size());
+        assertEquals(0, BigDecimal.valueOf(0.2).setScale(1, RoundingMode.HALF_UP).compareTo(result.getRemaining_size()));
     }
 }

@@ -38,8 +38,8 @@ class MatchedOrderBookMessageTest {
         assertEquals("132fb6ae-456b-4654-b4e0-d681ac05cea1", result.getTaker_order_id());
         assertEquals("2014-11-07T08:19:27.028459Z", result.getTime().toString());
         assertEquals("BTC-USD", result.getProduct_id());
-        assertEquals(new BigDecimal(5.23512).setScale(5, RoundingMode.HALF_UP), result.getSize());
-        assertEquals(new BigDecimal(400.23).setScale(2, RoundingMode.HALF_UP), result.getPrice());
+        assertEquals(0, BigDecimal.valueOf(5.23512).setScale(5, RoundingMode.HALF_UP).compareTo(result.getSize()));
+        assertEquals(0, BigDecimal.valueOf(400.23).setScale(2, RoundingMode.HALF_UP).compareTo(result.getPrice()));
         assertEquals("sell", result.getSide());
     }
 
