@@ -1,19 +1,15 @@
 dependencies {
-    implementation project(':model')
-    implementation project(':security')
-    implementation 'javax.websocket:javax.websocket-client-api:1.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core'
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    api project(':model')
+    api project(':security')
+    api 'javax.websocket:javax.websocket-client-api:1.1'
+    api 'com.fasterxml.jackson.core:jackson-core'
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.core:jackson-annotations'
     runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8'
     runtimeOnly 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    implementation 'org.slf4j:slf4j-api'
+    api 'org.slf4j:slf4j-api'
 
     testImplementation('org.junit.jupiter:junit-jupiter')
-//    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-params'
-//    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'ch.qos.logback:logback-classic'
     testImplementation 'ch.qos.logback:logback-core'
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
