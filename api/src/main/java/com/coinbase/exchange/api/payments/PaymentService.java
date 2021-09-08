@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.payments;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;

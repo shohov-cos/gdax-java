@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.reports;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 /**

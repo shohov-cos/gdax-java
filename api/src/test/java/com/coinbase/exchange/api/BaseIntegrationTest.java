@@ -1,6 +1,7 @@
 package com.coinbase.exchange.api;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseWallet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,4 +19,7 @@ public abstract class BaseIntegrationTest {
 
     @Autowired
     public CoinbaseExchange exchange;
+
+    @Autowired
+    public CoinbaseWallet wallet;
 }

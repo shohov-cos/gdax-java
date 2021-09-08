@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.products;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.coinbase.exchange.model.Candles;
 import com.coinbase.exchange.model.Granularity;
 import com.coinbase.exchange.model.Product;

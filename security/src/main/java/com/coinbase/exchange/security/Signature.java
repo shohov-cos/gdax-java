@@ -5,6 +5,7 @@ import com.coinbase.exchange.security.constants.ExchangeConstants;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.management.RuntimeErrorException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.util.Base64;
 
@@ -13,10 +14,19 @@ import java.util.Base64;
  */
 public class Signature {
 
-    private final String secretKey;
+    public enum SignatureEncoding {
+        BASE64,
+        HEX
+    }
 
-    public Signature(final String secretKey) {
+    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+
+    private final byte[] secretKey;
+    private final SignatureEncoding signatureEncoding;
+
+    public Signature(byte[] secretKey, SignatureEncoding signatureEncoding) {
         this.secretKey = secretKey;
+        this.signatureEncoding = signatureEncoding;
     }
 
     /**
@@ -25,6 +35,7 @@ public class Signature {
      * timestamp + method + requestPath + body (where + represents string concatenation)
      * and base64-encode the output.
      * The timestamp value is the same as the CB-ACCESS-TIMESTAMP header.
+     *
      * @param requestPath
      * @param method
      * @param body
@@ -34,14 +45,28 @@ public class Signature {
     public String generate(String requestPath, String method, String body, String timestamp) {
         try {
             String prehash = timestamp + method.toUpperCase() + requestPath + body;
-            byte[] secretDecoded = Base64.getDecoder().decode(secretKey);
-            SecretKeySpec keyspec = new SecretKeySpec(secretDecoded, ExchangeConstants.SHARED_MAC.getAlgorithm());
+            SecretKeySpec keyspec = new SecretKeySpec(secretKey, ExchangeConstants.SHARED_MAC.getAlgorithm());
             Mac sha256 = (Mac) ExchangeConstants.SHARED_MAC.clone();
             sha256.init(keyspec);
-            return Base64.getEncoder().encodeToString(sha256.doFinal(prehash.getBytes()));
+            byte[] signature = sha256.doFinal(prehash.getBytes(StandardCharsets.UTF_8));
+            if (signatureEncoding == SignatureEncoding.BASE64) {
+                return Base64.getEncoder().encodeToString(signature);
+            } else {
+                return bytesToHex(signature);
+            }
         } catch (CloneNotSupportedException | InvalidKeyException e) {
             e.printStackTrace();
             throw new RuntimeErrorException(new Error("Cannot set up authentication headers."));
         }
+    }
+
+    private String bytesToHex(byte[] bytes) {
+        byte[] hexChars = new byte[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+        }
+        return new String(hexChars, StandardCharsets.UTF_8);
     }
 }

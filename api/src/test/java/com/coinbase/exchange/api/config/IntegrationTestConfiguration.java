@@ -1,8 +1,9 @@
 package com.coinbase.exchange.api.config;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
-import com.coinbase.exchange.api.exchange.CoinbaseExchangeImpl;
-import com.coinbase.exchange.security.Signature;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchangeImpl;
+import com.coinbase.exchange.api.coinbase.CoinbaseWallet;
+import com.coinbase.exchange.api.coinbase.CoinbaseWalletImpl;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,7 +30,20 @@ public class IntegrationTestConfiguration {
         return new CoinbaseExchangeImpl(apiKey,
                 passphrase,
                 baseUrl,
-                new Signature(secretKey),
+                secretKey,
+                objectMapper,
+                Executors.newSingleThreadExecutor());
+    }
+
+    @Bean
+    public CoinbaseWallet coinbaseWallet(@Value("${wallet.key}") String apiKey,
+                                         @Value("${wallet.api.baseUrl}") String baseUrl,
+                                         @Value("${wallet.secret}") String secretKey,
+                                         ObjectMapper objectMapper) {
+        return new CoinbaseWalletImpl(apiKey,
+                baseUrl,
+                secretKey,
+                null,
                 objectMapper,
                 Executors.newSingleThreadExecutor());
     }

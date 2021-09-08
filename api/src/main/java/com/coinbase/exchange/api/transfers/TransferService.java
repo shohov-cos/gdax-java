@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.transfers;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.math.BigDecimal;

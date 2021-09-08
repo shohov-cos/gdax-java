@@ -1,4 +1,4 @@
-package com.coinbase.exchange.api.exchange;
+package com.coinbase.exchange.api.coinbase;
 
 import com.coinbase.exchange.security.Signature;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +14,7 @@ import java.net.http.HttpHeaders;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -22,27 +23,32 @@ import java.util.concurrent.ExecutorService;
  * This class acts as a central point for providing user configuration and making GET/POST/PUT requests as well as
  * getting responses as Lists of objects rather than arrays.
  */
-public class CoinbaseExchangeImpl implements CoinbaseExchange {
+public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
 
-    static final Logger log = LoggerFactory.getLogger(CoinbaseExchangeImpl.class.getName());
+    static final Logger log = LoggerFactory.getLogger(CoinbaseCommonImpl.class.getName());
+
+    private static final String DEFAULT_VERSION = "2021-08-24";
 
     private final String publicKey;
     private final String passphrase;
     private final String baseUrl;
     private final Signature signature;
+    private final String version;
     private final ObjectMapper objectMapper;
     private final HttpClient httpClient;
 
-    public CoinbaseExchangeImpl(final String publicKey,
-                                final String passphrase,
-                                final String baseUrl,
-                                final Signature signature,
-                                final ObjectMapper objectMapper,
-                                final ExecutorService executorService) {
+    public CoinbaseCommonImpl(final String publicKey,
+                              final String passphrase,
+                              final String baseUrl,
+                              final Signature signature,
+                              final String version,
+                              final ObjectMapper objectMapper,
+                              final ExecutorService executorService) {
         this.publicKey = publicKey;
         this.passphrase = passphrase;
         this.baseUrl = baseUrl;
         this.signature = signature;
+        this.version = version;
         this.objectMapper = objectMapper;
         this.httpClient = HttpClient.newBuilder().executor(executorService).build();
     }
@@ -67,16 +73,6 @@ public class CoinbaseExchangeImpl implements CoinbaseExchange {
             Thread.currentThread().interrupt();
             throw new CoinbaseInterruptedException(e);
         }
-    }
-
-    @Override
-    public <T> T pagedGet(String resourcePath,
-                          TypeReference<T> typeReference,
-                          String beforeOrAfter,
-                          Integer pageNumber,
-                          Integer limit) {
-        resourcePath += "?" + beforeOrAfter + "=" + pageNumber + "&limit=" + limit;
-        return get(resourcePath, typeReference);
     }
 
     @Override
@@ -132,29 +128,33 @@ public class CoinbaseExchangeImpl implements CoinbaseExchange {
 
     @Override
     public String[] securityHeaders(String endpoint, String method, String jsonBody) {
-        String[] headers = new String[14];
+        List<String> headers = new ArrayList<>(16);
 
         String timestamp = Instant.now().getEpochSecond() + "";
         String resource = endpoint.replace(getBaseUrl(), "");
 
-        headers[0] = "accept";
-        headers[1] = "application/json";
-        headers[2] = "content-type";
-        headers[3] = "application/json";
-        headers[4] = "User-Agent";
-        headers[5] = "gdax-java unofficial coinbase pro api library";
-        headers[6] = "CB-ACCESS-KEY";
-        headers[7] = publicKey;
-        headers[8] = "CB-ACCESS-SIGN";
-        headers[9] = signature.generate(resource, method, jsonBody, timestamp);
-        headers[10] = "CB-ACCESS-TIMESTAMP";
-        headers[11] = timestamp;
-        headers[12] = "CB-ACCESS-PASSPHRASE";
-        headers[13] = passphrase;
+        headers.add("accept");
+        headers.add("application/json");
+        headers.add("content-type");
+        headers.add("application/json");
+        headers.add("User-Agent");
+        headers.add("shohov-cos/gdax-java");
+        headers.add("CB-ACCESS-KEY");
+        headers.add(publicKey);
+        headers.add("CB-ACCESS-SIGN");
+        headers.add(signature.generate(resource, method, jsonBody, timestamp));
+        headers.add("CB-ACCESS-TIMESTAMP");
+        headers.add(timestamp);
+        if (passphrase != null) {
+            headers.add("CB-ACCESS-PASSPHRASE");
+            headers.add(passphrase);
+        }
+        headers.add("CB-VERSION");
+        headers.add(version != null ? version : DEFAULT_VERSION);
 
         curlRequest(method, jsonBody, headers, resource);
 
-        return headers;
+        return headers.toArray(new String[0]);
     }
 
     /**
@@ -162,11 +162,11 @@ public class CoinbaseExchangeImpl implements CoinbaseExchange {
      * note that the signature is time-sensitive and has a time to live of about 1 minute after which the request
      * is no longer valid.
      */
-    private void curlRequest(String method, String jsonBody, String[] headers, String resource) {
+    private void curlRequest(String method, String jsonBody, List<String> headers, String resource) {
         if (log.isDebugEnabled()) {
             StringBuilder curlTest = new StringBuilder("curl ");
-            for (int i = 0; i < headers.length; i += 2) {
-                curlTest.append("-H '").append(headers[i]).append(":").append(headers[i + 1]).append("' ");
+            for (int i = 0; i < headers.size(); i += 2) {
+                curlTest.append("-H '").append(headers.get(i)).append(": ").append(headers.get(i + 1)).append("' ");
             }
             if (jsonBody != null && !jsonBody.equals(""))
                 curlTest.append("-d '").append(jsonBody).append("' ");

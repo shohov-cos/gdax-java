@@ -1,4 +1,4 @@
-package com.coinbase.exchange.api.exchange;
+package com.coinbase.exchange.api.coinbase;
 
 public class CoinbaseInterruptedException extends RuntimeException {
 

@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.orders;
 
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.coinbase.exchange.model.Fill;
 import com.coinbase.exchange.model.Hold;
 import com.coinbase.exchange.model.NewOrderSingle;

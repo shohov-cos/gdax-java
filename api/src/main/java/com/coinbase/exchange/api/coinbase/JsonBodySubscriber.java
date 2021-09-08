@@ -1,4 +1,4 @@
-package com.coinbase.exchange.api.exchange;
+package com.coinbase.exchange.api.coinbase;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

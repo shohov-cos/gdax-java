@@ -2,7 +2,7 @@ package com.coinbase.exchange.api.deposits;
 
 import com.coinbase.exchange.model.CoinbasePaymentRequest;
 import com.coinbase.exchange.model.PaymentResponse;
-import com.coinbase.exchange.api.exchange.CoinbaseExchange;
+import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.math.BigDecimal;

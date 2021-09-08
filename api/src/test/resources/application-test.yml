@@ -5,6 +5,12 @@ exchange:
   secret: ""
   passphrase: ""
 
+wallet:
+  api:
+    baseUrl: https://api.coinbase.com
+  key: ""
+  secret: ""
+
 websocket:
   baseUrl: "wss://ws-feed-public.sandbox.pro.coinbase.com"
 
