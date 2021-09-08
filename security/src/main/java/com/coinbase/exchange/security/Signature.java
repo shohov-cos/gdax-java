@@ -19,7 +19,7 @@ public class Signature {
         HEX
     }
 
-    private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes(StandardCharsets.US_ASCII);
+    private static final byte[] HEX_ARRAY = "0123456789abcdef".getBytes(StandardCharsets.US_ASCII);
 
     private final byte[] secretKey;
     private final SignatureEncoding signatureEncoding;
