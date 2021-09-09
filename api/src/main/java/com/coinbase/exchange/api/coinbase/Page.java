@@ -9,6 +9,22 @@ public class Page<T> {
     private Pagination pagination;
     private List<T> data;
 
+    public Pagination getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
+    }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
+    }
+
     public static class Pagination {
         private String endingBefore;
         private String startingAfter;

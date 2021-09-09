@@ -99,13 +99,23 @@ public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
 
     @Override
     public <T, R> T post(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
+        return postOrPut("POST", resourcePath, typeReference, jsonObj);
+    }
+
+
+    @Override
+    public <T, R> T put(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
+        return postOrPut("PUT", resourcePath, typeReference, jsonObj);
+    }
+
+    private <T, R> T postOrPut(String method, String resourcePath, TypeReference<T> typeReference, R jsonObj) {
         String jsonBody = toJson(jsonObj);
 
         try {
             HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder()
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .method(method, HttpRequest.BodyPublishers.ofString(jsonBody))
                     .uri(URI.create(getBaseUrl() + resourcePath))
-                    .headers(securityHeaders(resourcePath, "POST", jsonBody))
+                    .headers(securityHeaders(resourcePath, method, jsonBody))
                     .build(), HttpResponse.BodyHandlers.ofString());
             logResponse(response);
             if (response.statusCode() < 200 || response.statusCode() > 299) {

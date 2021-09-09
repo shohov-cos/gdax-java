@@ -5,6 +5,9 @@ import com.coinbase.exchange.api.coinbase.Data;
 import com.coinbase.exchange.api.coinbase.Page;
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import java.util.Collections;
+import java.util.Map;
+
 public class CoinbaseAccountService {
 
     final CoinbaseWallet wallet;
@@ -20,9 +23,19 @@ public class CoinbaseAccountService {
     }
 
     public CoinbaseAccount getCoinbaseAccount(String coinbaseAccountId) {
-        String accountHistoryEndpoint = COINBASE_ACCOUNTS_ENDPOINT + "/" + coinbaseAccountId;
-        Data<CoinbaseAccount> data = wallet.get(accountHistoryEndpoint, new TypeReference<>(){});
+        String coinbaseAccountEndpoint = COINBASE_ACCOUNTS_ENDPOINT + "/" + coinbaseAccountId;
+        Data<CoinbaseAccount> data = wallet.get(coinbaseAccountEndpoint, new TypeReference<>(){});
         return data.getData();
     }
 
+    public CoinbaseAccount updateCoinbaseAccount(String coinbaseAccountId, String name) {
+        Map<String, String> body;
+        if (name != null) {
+            body = Map.of("name", name);
+        } else {
+            body = Collections.emptyMap();
+        }
+        Data<CoinbaseAccount> data = wallet.put(COINBASE_ACCOUNTS_ENDPOINT + "/" + coinbaseAccountId, new TypeReference<>(){}, body);
+        return data.getData();
+    }
 }

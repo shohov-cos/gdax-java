@@ -9,7 +9,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * See class doc for BaseIntegrationTest
@@ -28,6 +30,25 @@ class CoinbaseAccountsIntegrationTest extends BaseIntegrationTest {
     @Test
     void canGetCoinbaseAccounts() {
         Page<CoinbaseAccount> coinbaseAccounts  = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
-        assertNotNull(coinbaseAccounts);
+        assertTrue(coinbaseAccounts.getData().size() > 0);
+    }
+
+    @Test
+    void canGetCoinbaseAccount() {
+        Page<CoinbaseAccount> coinbaseAccounts  = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
+        CoinbaseAccount coinbaseAccount = coinbaseAccountService.getCoinbaseAccount(coinbaseAccounts.getData().get(0).getId());
+        assertNotNull(coinbaseAccount);
+        assertEquals(coinbaseAccounts.getData().get(0).getId(), coinbaseAccount.getId());
+    }
+
+    @Test
+    void canUpdateCoinbaseAccount() {
+        Page<CoinbaseAccount> coinbaseAccounts  = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
+        String newName = Integer.toString(ThreadLocalRandom.current().nextInt());
+        CoinbaseAccount coinbaseAccount = coinbaseAccountService.updateCoinbaseAccount(coinbaseAccounts.getData().get(0).getId(), newName);
+        assertEquals(newName, coinbaseAccount.getName());
+        coinbaseAccount = coinbaseAccountService.getCoinbaseAccount(coinbaseAccounts.getData().get(0).getId());
+        assertNotNull(coinbaseAccount);
+        assertEquals(newName, coinbaseAccount.getName());
     }
 }
