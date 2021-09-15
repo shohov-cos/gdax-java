@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.OffsetDateTime;
 
-public class Address {
+public class CoinbaseAddress {
     private String id;
     private String address;
     private String name;

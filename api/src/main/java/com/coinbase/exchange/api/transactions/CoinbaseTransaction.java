@@ -1,6 +1,6 @@
 package com.coinbase.exchange.api.transactions;
 
-import com.coinbase.exchange.api.addresses.Address;
+import com.coinbase.exchange.api.addresses.CoinbaseAddress;
 import com.coinbase.exchange.api.coinbaseaccounts.MoneyAmount;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +22,7 @@ public class CoinbaseTransaction {
     private Map<String, Object> network;
     private Map<String, Object> to;
     private Map<String, Object> from;
-    private Address address;
+    private CoinbaseAddress coinbaseAddress;
 
     public String getId() {
         return id;
@@ -140,11 +140,11 @@ public class CoinbaseTransaction {
         this.from = from;
     }
 
-    public Address getAddress() {
-        return address;
+    public CoinbaseAddress getAddress() {
+        return coinbaseAddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(CoinbaseAddress coinbaseAddress) {
+        this.coinbaseAddress = coinbaseAddress;
     }
 }

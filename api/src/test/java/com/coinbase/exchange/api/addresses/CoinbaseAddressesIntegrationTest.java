@@ -21,15 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(SpringExtension.class)
 @Import({IntegrationTestConfiguration.class})
-class AddressesIntegrationTest extends BaseIntegrationTest {
+class CoinbaseAddressesIntegrationTest extends BaseIntegrationTest {
 
     CoinbaseAccountService coinbaseAccountService;
-    AddressService addressService;
+    CoinbaseAddressService coinbaseAddressService;
 
     @BeforeEach
     void setUp() {
         this.coinbaseAccountService = new CoinbaseAccountService(wallet);
-        this.addressService = new AddressService(wallet);
+        this.coinbaseAddressService = new CoinbaseAddressService(wallet);
     }
 
     @Test
@@ -37,11 +37,11 @@ class AddressesIntegrationTest extends BaseIntegrationTest {
         Page<CoinbaseAccount> coinbaseAccounts = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
         CoinbaseAccount coinbaseAccount = coinbaseAccounts.getData().stream().filter(ca -> ca.getCurrency().getCode().equals("BTC")).findAny().orElseThrow();
         String newName = Integer.toString(ThreadLocalRandom.current().nextInt());
-        Address createdAddress = addressService.createAddress(coinbaseAccount.getId(), newName);
-        assertNotNull(createdAddress);
-        Address address = addressService.getAddress(coinbaseAccount.getId(), createdAddress.getId());
-        assertNotNull(address);
-        Page<Address> addresses = addressService.getAddresses(coinbaseAccount.getId(), null, null, null, null);
+        CoinbaseAddress createdCoinbaseAddress = coinbaseAddressService.createCoinbaseAddress(coinbaseAccount.getId(), newName);
+        assertNotNull(createdCoinbaseAddress);
+        CoinbaseAddress coinbaseAddress = coinbaseAddressService.getCoinbaseAddress(coinbaseAccount.getId(), createdCoinbaseAddress.getId());
+        assertNotNull(coinbaseAddress);
+        Page<CoinbaseAddress> addresses = coinbaseAddressService.getCoinbaseAddresses(coinbaseAccount.getId(), null, null, null, null);
         assertTrue(addresses.getData().size() > 0);
     }
 
@@ -49,9 +49,9 @@ class AddressesIntegrationTest extends BaseIntegrationTest {
     void canGetTransactionsOnAddress() {
         Page<CoinbaseAccount> coinbaseAccounts = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
         CoinbaseAccount coinbaseAccount = coinbaseAccounts.getData().stream().filter(ca -> ca.getCurrency().getCode().equals("BTC")).findAny().orElseThrow();
-        Page<Address> addresses = addressService.getAddresses(coinbaseAccount.getId(), null, null, null, null);
-        Address address = addresses.getData().stream().findAny().orElseGet(() -> addressService.createAddress(coinbaseAccount.getId(), Integer.toString(ThreadLocalRandom.current().nextInt())));
-        Page<CoinbaseTransaction> addressTransactions = addressService.getAddressTransactions(coinbaseAccount.getId(), address.getId(), null, null, null, null);
+        Page<CoinbaseAddress> addresses = coinbaseAddressService.getCoinbaseAddresses(coinbaseAccount.getId(), null, null, null, null);
+        CoinbaseAddress coinbaseAddress = addresses.getData().stream().findAny().orElseGet(() -> coinbaseAddressService.createCoinbaseAddress(coinbaseAccount.getId(), Integer.toString(ThreadLocalRandom.current().nextInt())));
+        Page<CoinbaseTransaction> addressTransactions = coinbaseAddressService.getCoinbaseAddressTransactions(coinbaseAccount.getId(), coinbaseAddress.getId(), null, null, null, null);
         assertNotNull(addressTransactions.getData());
     }
 }

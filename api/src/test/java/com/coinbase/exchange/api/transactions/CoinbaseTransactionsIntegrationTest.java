@@ -18,22 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(SpringExtension.class)
 @Import({IntegrationTestConfiguration.class})
-class TransactionsIntegrationTest extends BaseIntegrationTest {
+class CoinbaseTransactionsIntegrationTest extends BaseIntegrationTest {
 
     CoinbaseAccountService coinbaseAccountService;
-    TransactionsService transactionsService;
+    CoinbaseTransactionService coinbaseTransactionService;
 
     @BeforeEach
     void setUp() {
         this.coinbaseAccountService = new CoinbaseAccountService(wallet);
-        this.transactionsService = new TransactionsService(wallet);
+        this.coinbaseTransactionService = new CoinbaseTransactionService(wallet);
     }
 
     @Test
     void canGetTransactions() {
         Page<CoinbaseAccount> coinbaseAccounts  = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
         CoinbaseAccount coinbaseAccount = coinbaseAccounts.getData().stream().filter(ca -> ca.getCurrency().getCode().equals("BTC")).findAny().orElseThrow();
-        Page<CoinbaseTransaction> coinbaseTransactions  = transactionsService.getCoinbaseTransactions(coinbaseAccount.getId(), null, null, null, null);
+        Page<CoinbaseTransaction> coinbaseTransactions  = coinbaseTransactionService.getCoinbaseTransactions(coinbaseAccount.getId(), null, null, null, null);
         assertTrue(coinbaseTransactions.getData().size() > 0);
     }
 }

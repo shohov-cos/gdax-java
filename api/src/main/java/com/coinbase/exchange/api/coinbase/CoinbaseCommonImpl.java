@@ -109,11 +109,19 @@ public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
     }
 
     private <T, R> T postOrPut(String method, String resourcePath, TypeReference<T> typeReference, R jsonObj) {
-        String jsonBody = toJson(jsonObj);
+        String jsonBody;
+        HttpRequest.BodyPublisher bodyPublisher;
+        if (jsonObj != null) {
+            jsonBody = toJson(jsonObj);
+            bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonBody);
+        } else {
+            jsonBody = "";
+            bodyPublisher = HttpRequest.BodyPublishers.noBody();
+        }
 
         try {
             HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder()
-                    .method(method, HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .method(method, bodyPublisher)
                     .uri(URI.create(getBaseUrl() + resourcePath))
                     .headers(securityHeaders(resourcePath, method, jsonBody))
                     .build(), HttpResponse.BodyHandlers.ofString());
