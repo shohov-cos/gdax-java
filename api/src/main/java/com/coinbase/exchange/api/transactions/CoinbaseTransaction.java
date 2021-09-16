@@ -18,6 +18,7 @@ public class CoinbaseTransaction {
     private OffsetDateTime updatedAt;
     private String resource;
     private String resourcePath;
+    private Boolean instantExchange;
     private Map<String, Object> details;
     private Map<String, Object> network;
     private Map<String, Object> to;
@@ -106,6 +107,15 @@ public class CoinbaseTransaction {
     @JsonProperty("resource_path")
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
+    }
+
+    public Boolean getInstantExchange() {
+        return instantExchange;
+    }
+
+    @JsonProperty("instant_exchange")
+    public void setInstantExchange(Boolean instantExchange) {
+        this.instantExchange = instantExchange;
     }
 
     public Map<String, Object> getDetails() {

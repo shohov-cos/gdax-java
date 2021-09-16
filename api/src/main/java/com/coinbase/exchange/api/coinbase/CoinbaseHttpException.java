@@ -2,7 +2,7 @@ package com.coinbase.exchange.api.coinbase;
 
 import java.net.http.HttpResponse;
 
-public class CoinbaseHttpException extends RuntimeException {
+public class CoinbaseHttpException extends CoinbaseException {
 
     private final HttpResponse<String> response;
 
