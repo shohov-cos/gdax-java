@@ -4,8 +4,10 @@ import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import com.coinbase.exchange.api.payments.CoinbaseAccount;
 import com.coinbase.exchange.api.payments.PaymentService;
+import com.coinbase.exchange.api.payments.PaymentServiceImpl;
 import com.coinbase.exchange.api.payments.PaymentType;
 import com.coinbase.exchange.api.withdrawals.WithdrawalsService;
+import com.coinbase.exchange.api.withdrawals.WithdrawalsServiceImpl;
 import com.coinbase.exchange.model.PaymentResponse;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,9 +41,9 @@ public class WithdrawalIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.paymentService = new PaymentService(exchange);
-        this.withdrawalsService = new WithdrawalsService(exchange);
-        this.accountService = new AccountService(exchange);
+        this.paymentService = new PaymentServiceImpl(exchange);
+        this.withdrawalsService = new WithdrawalsServiceImpl(exchange);
+        this.accountService = new AccountServiceImpl(exchange);
     }
 
     @Test

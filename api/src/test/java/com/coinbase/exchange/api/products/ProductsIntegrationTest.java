@@ -40,7 +40,7 @@ public class ProductsIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.productService = new ProductService(exchange);
+        this.productService = new ProductServiceImpl(exchange);
     }
 
     @Test

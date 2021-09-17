@@ -20,7 +20,7 @@ public class PaymentIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        testee = new PaymentService(exchange);
+        testee = new PaymentServiceImpl(exchange);
     }
 
     @Test

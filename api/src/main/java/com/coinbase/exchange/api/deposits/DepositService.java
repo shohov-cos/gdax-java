@@ -1,50 +1,11 @@
 package com.coinbase.exchange.api.deposits;
 
-import com.coinbase.exchange.model.CoinbasePaymentRequest;
 import com.coinbase.exchange.model.PaymentResponse;
-import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.math.BigDecimal;
 
-/**
- * Created by robevansuk on 16/02/2017.
- */
-public class DepositService {
+public interface DepositService {
+    PaymentResponse depositViaPaymentMethod(BigDecimal amount, String currency, String paymentMethodId);
 
-    private static final String DEPOSIT_ENDPOINT = "/deposits";
-    private static final String PAYMENTS = "/payment-method";
-    private static final String COINBASE_PAYMENT = "/coinbase-account";
-
-    final CoinbaseExchange exchange;
-
-    public DepositService(final CoinbaseExchange exchange) {
-        this.exchange = exchange;
-    }
-
-    /**
-     * @param amount
-     * @param currency
-     * @param paymentMethodId
-     * @return PaymentResponse
-     */
-    public PaymentResponse depositViaPaymentMethod(BigDecimal amount, String currency, final String paymentMethodId) {
-        CoinbasePaymentRequest coinbasePaymentRequest = new CoinbasePaymentRequest(amount, currency, paymentMethodId);
-        return exchange.post(DEPOSIT_ENDPOINT + PAYMENTS,
-                new TypeReference<>(){},
-                coinbasePaymentRequest);
-    }
-
-    /**
-     * @param amount
-     * @param currency
-     * @param coinbaseAccountId
-     * @return PaymentResponse
-     */
-    public PaymentResponse depositViaCoinbase(BigDecimal amount, String currency, String coinbaseAccountId) {
-        CoinbasePaymentRequest coinbasePaymentRequest = new CoinbasePaymentRequest(amount, currency, coinbaseAccountId);
-        return exchange.post(DEPOSIT_ENDPOINT + COINBASE_PAYMENT,
-                new TypeReference<>(){},
-                coinbasePaymentRequest);
-    }
+    PaymentResponse depositViaCoinbase(BigDecimal amount, String currency, String coinbaseAccountId);
 }

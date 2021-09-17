@@ -3,6 +3,7 @@ package com.coinbase.exchange.api.marketdata;
 import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import com.coinbase.exchange.api.products.ProductService;
+import com.coinbase.exchange.api.products.ProductServiceImpl;
 import com.coinbase.exchange.model.Product;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,8 @@ public class MarketDataIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService(exchange);
-        testee = new MarketDataService(exchange);
+        productService = new ProductServiceImpl(exchange);
+        testee = new MarketDataServiceImpl(exchange);
     }
 
     @Test

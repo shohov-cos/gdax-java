@@ -3,8 +3,10 @@ package com.coinbase.exchange.api.accounts;
 import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import com.coinbase.exchange.api.deposits.DepositService;
+import com.coinbase.exchange.api.deposits.DepositServiceImpl;
 import com.coinbase.exchange.api.payments.CoinbaseAccount;
 import com.coinbase.exchange.api.payments.PaymentService;
+import com.coinbase.exchange.api.payments.PaymentServiceImpl;
 import com.coinbase.exchange.model.PaymentResponse;
 import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,9 +39,9 @@ public class DepositIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.paymentService = new PaymentService(exchange);
-        this.accountService = new AccountService(exchange);
-        this.testee = new DepositService(exchange);
+        this.paymentService = new PaymentServiceImpl(exchange);
+        this.accountService = new AccountServiceImpl(exchange);
+        this.testee = new DepositServiceImpl(exchange);
     }
 
     @Test

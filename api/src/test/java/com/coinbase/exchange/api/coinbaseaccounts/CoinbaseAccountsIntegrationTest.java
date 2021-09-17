@@ -24,7 +24,7 @@ class CoinbaseAccountsIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.coinbaseAccountService = new CoinbaseAccountService(wallet);
+        this.coinbaseAccountService = new CoinbaseAccountServiceImpl(wallet);
     }
 
     @Test

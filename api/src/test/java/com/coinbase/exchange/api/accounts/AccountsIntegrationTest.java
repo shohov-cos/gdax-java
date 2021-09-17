@@ -27,7 +27,7 @@ public class AccountsIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.accountService = new AccountService(exchange);
+        this.accountService = new AccountServiceImpl(exchange);
     }
 
     @Test

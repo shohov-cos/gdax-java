@@ -3,10 +3,13 @@ package com.coinbase.exchange.api.orders;
 import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.accounts.Account;
 import com.coinbase.exchange.api.accounts.AccountService;
+import com.coinbase.exchange.api.accounts.AccountServiceImpl;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import com.coinbase.exchange.api.marketdata.MarketData;
 import com.coinbase.exchange.api.marketdata.MarketDataService;
+import com.coinbase.exchange.api.marketdata.MarketDataServiceImpl;
 import com.coinbase.exchange.api.products.ProductService;
+import com.coinbase.exchange.api.products.ProductServiceImpl;
 import com.coinbase.exchange.model.Fill;
 import com.coinbase.exchange.model.NewLimitOrderSingle;
 import com.coinbase.exchange.model.NewMarketOrderSingle;
@@ -51,10 +54,10 @@ public class OrderIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.productService = new ProductService(exchange);
-        this.accountService = new AccountService(exchange);
-        this.marketDataService = new MarketDataService(exchange);
-        this.testee = new OrderService(exchange);
+        this.productService = new ProductServiceImpl(exchange);
+        this.accountService = new AccountServiceImpl(exchange);
+        this.marketDataService = new MarketDataServiceImpl(exchange);
+        this.testee = new OrderServiceImpl(exchange);
     }
 
     /**

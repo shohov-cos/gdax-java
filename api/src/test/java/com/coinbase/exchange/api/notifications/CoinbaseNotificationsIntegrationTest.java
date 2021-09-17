@@ -22,7 +22,7 @@ class CoinbaseNotificationsIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.coinbaseNotificationService = new CoinbaseNotificationService(wallet);
+        this.coinbaseNotificationService = new CoinbaseNotificationServiceImpl(wallet);
     }
 
     @Test

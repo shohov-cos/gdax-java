@@ -3,6 +3,7 @@ package com.coinbase.exchange.api.authentication;
 import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.accounts.Account;
 import com.coinbase.exchange.api.accounts.AccountService;
+import com.coinbase.exchange.api.accounts.AccountServiceImpl;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class AuthenticationIntegrationIntegrationTest extends BaseIntegrationTes
 
     @BeforeEach
     void setUp() {
-        accountService = new AccountService(exchange);
+        accountService = new AccountServiceImpl(exchange);
     }
 
     // ensure a basic request can be made. Not a great test. Improve.

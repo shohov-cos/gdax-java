@@ -4,6 +4,7 @@ import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import com.coinbase.exchange.api.useraccount.UserAccountData;
 import com.coinbase.exchange.api.useraccount.UserAccountService;
+import com.coinbase.exchange.api.useraccount.UserAccountServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ public class UserAccountServiceIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.userAccountService = new UserAccountService(exchange);
+        this.userAccountService = new UserAccountServiceImpl(exchange);
     }
 
     /**

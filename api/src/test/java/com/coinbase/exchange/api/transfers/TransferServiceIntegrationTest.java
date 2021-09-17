@@ -21,7 +21,7 @@ public class TransferServiceIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.transferService = new TransferService(exchange);
+        this.transferService = new TransferServiceImpl(exchange);
     }
 
 

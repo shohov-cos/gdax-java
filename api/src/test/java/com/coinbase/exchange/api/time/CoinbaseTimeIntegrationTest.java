@@ -29,7 +29,7 @@ class CoinbaseTimeIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.coinbaseTimeService = new CoinbaseTimeService(wallet);
+        this.coinbaseTimeService = new CoinbaseTimeServiceImpl(wallet);
     }
 
     @Test

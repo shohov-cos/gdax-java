@@ -4,6 +4,7 @@ import com.coinbase.exchange.api.BaseIntegrationTest;
 import com.coinbase.exchange.api.coinbase.Page;
 import com.coinbase.exchange.api.coinbaseaccounts.CoinbaseAccount;
 import com.coinbase.exchange.api.coinbaseaccounts.CoinbaseAccountService;
+import com.coinbase.exchange.api.coinbaseaccounts.CoinbaseAccountServiceImpl;
 import com.coinbase.exchange.api.config.IntegrationTestConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,8 +31,8 @@ class CoinbaseTransactionsIntegrationTest extends BaseIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        this.coinbaseAccountService = new CoinbaseAccountService(wallet);
-        this.coinbaseTransactionService = new CoinbaseTransactionService(wallet);
+        this.coinbaseAccountService = new CoinbaseAccountServiceImpl(wallet);
+        this.coinbaseTransactionService = new CoinbaseTransactionServiceImpl(wallet);
     }
 
     @Test

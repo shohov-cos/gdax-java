@@ -1,63 +1,27 @@
 package com.coinbase.exchange.api.orders;
 
-import com.coinbase.exchange.api.coinbase.CoinbaseExchange;
 import com.coinbase.exchange.model.Fill;
 import com.coinbase.exchange.model.Hold;
 import com.coinbase.exchange.model.NewOrderSingle;
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by robevansuk on 03/02/2017.
- */
-public class OrderService {
-    public static final String ORDERS_ENDPOINT = "/orders";
-    public static final String FILLS_ENDPOINT = "/fills";
+public interface OrderService {
+    List<Hold> getHolds(String accountId);
 
-    final CoinbaseExchange exchange;
+    List<Order> getOpenOrders(String accountId);
 
-    public OrderService(final CoinbaseExchange exchange) {
-        this.exchange = exchange;
-    }
+    Order getOrder(String orderId);
 
-    public List<Hold> getHolds(String accountId) {
-        return exchange.get(ORDERS_ENDPOINT + "/" + accountId + "/holds", new TypeReference<>(){});
-    }
+    Order createOrder(NewOrderSingle order);
 
-    public List<Order> getOpenOrders(String accountId) {
-        return exchange.get(ORDERS_ENDPOINT + "/" + accountId + "/orders", new TypeReference<>(){});
-    }
+    String cancelOrder(String orderId);
 
-    public Order getOrder(String orderId) {
-        return exchange.get(ORDERS_ENDPOINT + "/" + orderId,new TypeReference<>(){});
-    }
+    List<Order> getOpenOrders();
 
-    public Order createOrder(NewOrderSingle order) {
-        return exchange.post(ORDERS_ENDPOINT, new TypeReference<>(){}, order);
-    }
+    List<Order> cancelAllOpenOrders();
 
-    public String cancelOrder(String orderId) {
-        String deleteEndpoint = ORDERS_ENDPOINT + "/" + orderId;
-        return exchange.delete(deleteEndpoint, new TypeReference<>(){});
-    }
+    List<Fill> getFillsByProductId(String product_id, int resultLimit);
 
-    public List<Order> getOpenOrders() {
-        return exchange.get(ORDERS_ENDPOINT, new TypeReference<>(){});
-    }
-
-    public List<Order> cancelAllOpenOrders() {
-        return Arrays.asList(exchange.delete(ORDERS_ENDPOINT, new TypeReference<>(){}));
-    }
-
-    public List<Fill> getFillsByProductId(String product_id, int resultLimit) {
-        return exchange.get(FILLS_ENDPOINT + "?product_id=" + product_id + "&limit=" + resultLimit, new TypeReference<>(){});
-    }
-    
-    public List<Fill> getFillByOrderId(String order_id, int resultLimit) {
-        return exchange.get(FILLS_ENDPOINT + "?order_id=" + order_id + "&limit=" + resultLimit, new TypeReference<>(){});
-    }
+    List<Fill> getFillByOrderId(String order_id, int resultLimit);
 }
-
-
