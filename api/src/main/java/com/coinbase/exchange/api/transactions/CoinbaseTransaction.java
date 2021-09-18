@@ -23,7 +23,8 @@ public class CoinbaseTransaction {
     private Map<String, Object> network;
     private Map<String, Object> to;
     private Map<String, Object> from;
-    private CoinbaseAddress coinbaseAddress;
+    private String idem;
+    private CoinbaseAddress address;
 
     public String getId() {
         return id;
@@ -150,11 +151,19 @@ public class CoinbaseTransaction {
         this.from = from;
     }
 
-    public CoinbaseAddress getAddress() {
-        return coinbaseAddress;
+    public String getIdem() {
+        return idem;
     }
 
-    public void setAddress(CoinbaseAddress coinbaseAddress) {
-        this.coinbaseAddress = coinbaseAddress;
+    public void setIdem(String idem) {
+        this.idem = idem;
+    }
+
+    public CoinbaseAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(CoinbaseAddress address) {
+        this.address = address;
     }
 }
