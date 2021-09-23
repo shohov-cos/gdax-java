@@ -55,4 +55,14 @@ class CoinbaseAddressesIntegrationTest extends BaseIntegrationTest {
         Page<CoinbaseTransaction> addressTransactions = coinbaseAddressService.getCoinbaseAddressTransactions(coinbaseAccount.getId(), coinbaseAddress.getId(), null, null, null, null);
         assertNotNull(addressTransactions.getData());
     }
+
+    @Test
+    void canGetTransactionsOnAddressAsync() {
+        Page<CoinbaseAccount> coinbaseAccounts = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
+        CoinbaseAccount coinbaseAccount = coinbaseAccounts.getData().stream().filter(ca -> ca.getCurrency().getCode().equals("BTC")).findAny().orElseThrow();
+        Page<CoinbaseAddress> addresses = coinbaseAddressService.getCoinbaseAddressesAsync(coinbaseAccount.getId(), null, null, null, null).join();
+        CoinbaseAddress coinbaseAddress = addresses.getData().stream().findAny().orElseGet(() -> coinbaseAddressService.createCoinbaseAddress(coinbaseAccount.getId(), Integer.toString(ThreadLocalRandom.current().nextInt())));
+        Page<CoinbaseTransaction> addressTransactions = coinbaseAddressService.getCoinbaseAddressTransactionsAsync(coinbaseAccount.getId(), coinbaseAddress.getId(), null, null, null, null).join();
+        assertNotNull(addressTransactions.getData());
+    }
 }

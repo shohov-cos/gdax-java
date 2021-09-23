@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import static com.coinbase.exchange.security.Signature.SignatureEncoding.HEX;
@@ -18,6 +19,17 @@ public class CoinbaseWalletImpl extends CoinbaseCommonImpl implements CoinbaseWa
 
     @Override
     public <T> Page<T> pagedGet(String resourcePath, TypeReference<Page<T>> typeReference, String startingAfter, String endingBefore, Integer limit, String order) {
+        resourcePath = buildQueryPart(resourcePath, startingAfter, endingBefore, limit, order);
+        return get(resourcePath, typeReference);
+    }
+
+    @Override
+    public <T> CompletableFuture<Page<T>> pagedGetAsync(String resourcePath, TypeReference<Page<T>> typeReference, String startingAfter, String endingBefore, Integer limit, String order) {
+        resourcePath = buildQueryPart(resourcePath, startingAfter, endingBefore, limit, order);
+        return getAsync(resourcePath, typeReference);
+    }
+
+    private String buildQueryPart(String resourcePath, String startingAfter, String endingBefore, Integer limit, String order) {
         boolean questionMark = true;
         if (limit != null) {
             resourcePath += "?" + "limit=" + limit;
@@ -34,6 +46,6 @@ public class CoinbaseWalletImpl extends CoinbaseCommonImpl implements CoinbaseWa
             resourcePath += (questionMark ? "?" : "&") + "order=" + order;
 //            questionMark = false;
         }
-        return get(resourcePath, typeReference);
+        return resourcePath;
     }
 }

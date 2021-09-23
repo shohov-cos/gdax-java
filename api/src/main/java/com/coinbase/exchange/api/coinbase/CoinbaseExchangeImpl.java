@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Base64;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
 import static com.coinbase.exchange.security.Signature.SignatureEncoding.BASE64;
@@ -24,5 +25,15 @@ public class CoinbaseExchangeImpl extends CoinbaseCommonImpl implements Coinbase
                           Integer limit) {
         resourcePath += "?" + beforeOrAfter + "=" + pageNumber + "&limit=" + limit;
         return get(resourcePath, typeReference);
+    }
+
+    @Override
+    public <T> CompletableFuture<T> pagedGetAsync(String resourcePath,
+                                                  TypeReference<T> typeReference,
+                                                  String beforeOrAfter,
+                                                  Integer pageNumber,
+                                                  Integer limit) {
+        resourcePath += "?" + beforeOrAfter + "=" + pageNumber + "&limit=" + limit;
+        return getAsync(resourcePath, typeReference);
     }
 }

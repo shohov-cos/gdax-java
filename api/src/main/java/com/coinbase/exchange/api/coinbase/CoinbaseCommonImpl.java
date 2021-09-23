@@ -17,7 +17,9 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Function;
 
 /**
  * This class acts as a central point for providing user configuration and making GET/POST/PUT requests as well as
@@ -76,6 +78,16 @@ public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
     }
 
     @Override
+    public <T> CompletableFuture<T> getAsync(String resourcePath, TypeReference<T> typeReference) {
+        return httpClient.sendAsync(HttpRequest.newBuilder()
+                        .GET()
+                        .uri(URI.create(getBaseUrl() + resourcePath))
+                        .headers(securityHeaders(resourcePath, "GET", ""))
+                        .build(), HttpResponse.BodyHandlers.ofString())
+                .thenApply(processResponse(typeReference));
+    }
+
+    @Override
     public <T> T delete(String resourcePath, TypeReference<T> typeReference) {
         try {
             HttpResponse<String> response = httpClient.send(HttpRequest.newBuilder()
@@ -98,14 +110,33 @@ public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
     }
 
     @Override
+    public <T> CompletableFuture<T> deleteAsync(String resourcePath, TypeReference<T> typeReference) {
+        return httpClient.sendAsync(HttpRequest.newBuilder()
+                        .DELETE()
+                        .uri(URI.create(getBaseUrl() + resourcePath))
+                        .headers(securityHeaders(resourcePath, "DELETE", ""))
+                        .build(), HttpResponse.BodyHandlers.ofString())
+                .thenApply(processResponse(typeReference));
+    }
+
+    @Override
     public <T, R> T post(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
         return postOrPut("POST", resourcePath, typeReference, jsonObj);
     }
 
+    @Override
+    public <T, R> CompletableFuture<T> postAsync(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
+        return postOrPutAsync("POST", resourcePath, typeReference, jsonObj);
+    }
 
     @Override
     public <T, R> T put(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
         return postOrPut("PUT", resourcePath, typeReference, jsonObj);
+    }
+
+    @Override
+    public <T, R> CompletableFuture<T> putAsync(String resourcePath, TypeReference<T> typeReference, R jsonObj) {
+        return postOrPutAsync("PUT", resourcePath, typeReference, jsonObj);
     }
 
     private <T, R> T postOrPut(String method, String resourcePath, TypeReference<T> typeReference, R jsonObj) {
@@ -139,13 +170,46 @@ public abstract class CoinbaseCommonImpl implements CoinbaseCommon {
         }
     }
 
+    private <T, R> CompletableFuture<T> postOrPutAsync(String method, String resourcePath, TypeReference<T> typeReference, R jsonObj) {
+        String jsonBody;
+        HttpRequest.BodyPublisher bodyPublisher;
+        if (jsonObj != null) {
+            jsonBody = toJson(jsonObj);
+            bodyPublisher = HttpRequest.BodyPublishers.ofString(jsonBody);
+        } else {
+            jsonBody = "";
+            bodyPublisher = HttpRequest.BodyPublishers.noBody();
+        }
+
+        return httpClient.sendAsync(HttpRequest.newBuilder()
+                        .method(method, bodyPublisher)
+                        .uri(URI.create(getBaseUrl() + resourcePath))
+                        .headers(securityHeaders(resourcePath, method, jsonBody))
+                        .build(), HttpResponse.BodyHandlers.ofString())
+                .thenApply(processResponse(typeReference));
+    }
+
+    private <T> Function<HttpResponse<String>, T> processResponse(TypeReference<T> typeReference) {
+        return response -> {
+            try {
+                logResponse(response);
+                if (response.statusCode() < 200 || response.statusCode() > 299) {
+                    throw new CoinbaseHttpException(response);
+                } else {
+                    return objectMapper.readValue(response.body(), typeReference);
+                }
+            } catch (IOException e) {
+                throw new CoinbaseIOException(e);
+            }
+        };
+    }
+
     @Override
     public String getBaseUrl() {
         return baseUrl;
     }
 
-    @Override
-    public String[] securityHeaders(String endpoint, String method, String jsonBody) {
+    private String[] securityHeaders(String endpoint, String method, String jsonBody) {
         List<String> headers = new ArrayList<>(16);
 
         String timestamp = Instant.now().getEpochSecond() + "";
