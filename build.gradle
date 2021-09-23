@@ -20,6 +20,10 @@ allprojects {
         mavenCentral()
     }
 
+    java {
+        withSourcesJar()
+    }
+
     publishing {
         publications {
             coinbase(MavenPublication) {
