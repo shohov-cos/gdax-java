@@ -36,9 +36,10 @@ class CoinbaseAccountsIntegrationTest extends BaseIntegrationTest {
     @Test
     void canGetCoinbaseAccount() {
         Page<CoinbaseAccount> coinbaseAccounts  = coinbaseAccountService.getCoinbaseAccounts(null, null, null, null);
-        CoinbaseAccount coinbaseAccount = coinbaseAccountService.getCoinbaseAccount(coinbaseAccounts.getData().get(0).getId());
+        CoinbaseAccount coinbaseAccountFromList = coinbaseAccounts.getData().stream().filter(ca -> ca.getCurrency().getCode().equals("BTC")).findFirst().orElseThrow();
+        CoinbaseAccount coinbaseAccount = coinbaseAccountService.getCoinbaseAccount(coinbaseAccountFromList.getId());
         assertNotNull(coinbaseAccount);
-        assertEquals(coinbaseAccounts.getData().get(0).getId(), coinbaseAccount.getId());
+        assertEquals(coinbaseAccountFromList.getId(), coinbaseAccount.getId());
     }
 
     @Test

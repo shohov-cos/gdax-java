@@ -8,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -32,7 +33,9 @@ class CoinbaseExchangeRatesIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void canGetCoinbaseExchangeRatesWithCurrency() {
-        CoinbaseExchangeRates coinbaseExchangeRates = coinbaseExchangeRatesService.getCoinbaseExchangeRates("BTC");
+        CoinbaseExchangeRates coinbaseExchangeRates = coinbaseExchangeRatesService.getCoinbaseExchangeRates("EUR");
         assertNotNull(coinbaseExchangeRates);
+        assertNotNull(coinbaseExchangeRates.getRates());
+        assertFalse(coinbaseExchangeRates.getRates().isEmpty());
     }
 }
